@@ -6,11 +6,11 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "bhm-google-maps"
     gem.summary = %Q{Helpers for Google Maps v3 in Rails - Using html 5, the google maps api v3 and the static maps api}
-    gem.description = %Q{TODO: longer description of your gem}
-    gem.email = "sutto@sutto.net"
-    gem.homepage = "http://github.com/Sutto/bhm-google-maps"
+    gem.description = %Q{A set of helpers and javascript files that makes it trivial to implement google maps unobtrusively in an application.}
+    gem.email = "darcy.laycock+gems@youthtree.org.au"
+    gem.homepage = "http://github.com/YouthTree/bhm-google-maps"
     gem.authors = ["Darcy Laycock"]
-    gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
+    gem.add_development_dependency "shoulda", ">= 0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
