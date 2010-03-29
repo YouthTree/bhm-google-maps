@@ -1,0 +1,1 @@
+require 'bhm/google_maps'
