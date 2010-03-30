@@ -3,7 +3,7 @@ module BHM
     module Helper
       
       def using_gmaps_js?
-        instance_variable_defined?(:@using_gmaps_js) && !@using_gmaps_js
+        instance_variable_defined?(:@using_gmaps_js) && !!@using_gmaps_js
       end
       
       def google_maps_url(sensor = false)
