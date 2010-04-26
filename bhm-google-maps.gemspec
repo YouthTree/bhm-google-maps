@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Darcy Laycock"]
-  s.date = %q{2010-03-30}
+  s.date = %q{2010-04-26}
   s.description = %q{A set of helpers and javascript files that makes it trivial to implement google maps unobtrusively in an application.}
   s.email = %q{darcy.laycock@youthtree.org.au}
   s.extra_rdoc_files = [
@@ -22,12 +22,19 @@ Gem::Specification.new do |s|
      "LICENSE",
      "README.md",
      "Rakefile",
+     "bhm-google-maps.gemspec",
+     "coffeescripts/gmap.coffee",
+     "javascripts/gmap.js",
      "lib/bhm-google-maps.rb",
      "lib/bhm/google_maps.rb",
      "lib/bhm/google_maps/builder.rb",
      "lib/bhm/google_maps/helper.rb",
      "lib/bhm/google_maps/static_map.rb",
-     "test/helper.rb"
+     "lib/bhm/google_maps/version.rb",
+     "test/builder_test.rb",
+     "test/helper_test.rb",
+     "test/support/misc_helpers.rb",
+     "test/test_helper.rb"
   ]
   s.homepage = %q{http://github.com/YouthTree/bhm-google-maps}
   s.rdoc_options = ["--charset=UTF-8"]
@@ -35,7 +42,10 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.6}
   s.summary = %q{Helpers for Google Maps v3 in Rails - Using html 5, the google maps api v3 and the static maps api}
   s.test_files = [
-    "test/helper.rb"
+    "test/builder_test.rb",
+     "test/helper_test.rb",
+     "test/support/misc_helpers.rb",
+     "test/test_helper.rb"
   ]
 
   if s.respond_to? :specification_version then
