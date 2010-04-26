@@ -33,6 +33,21 @@ task :watch_scripts do
   system "coffee --no-wrap -w -c coffeescripts/*.coffee -o javascripts/"
 end
 
+desc "Compile scripts, and produce a minified version."
+task :build_scripts => [:compile_scripts] do
+  require 'closure-compiler'
+  build_prefix = "build/#{BHM::GoogleMaps::VERSION}"
+  FileUtils.mkdir_p build_prefix
+  Dir["javascripts/*.js"].each do |js|
+    new_name = js.gsub(/^javascripts\//, build_prefix + "/").gsub(/\.js$/, "-#{BHM::GoogleMaps::VERSION}.js")
+    FileUtils.cp js, new_name
+    min_name = new_name.gsub(/\.js$/, '.min.js')
+    File.open(min_name, "w+") do |f|
+      f.write Closure::Compiler.new.compile(File.read(js))
+    end
+  end
+end
+
 desc "Generate docs for the bhm-google-maps plugin"
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
