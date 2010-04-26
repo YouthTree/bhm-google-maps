@@ -46,6 +46,13 @@ task :build_scripts => [:compile_scripts] do
       f.write Closure::Compiler.new.compile(File.read(js))
     end
   end
+  # Copy javascript into stuff.
+  prefix = "lib/generators/bhm/google_maps/gmap_js/templates/public/javascripts"
+  Dir[File.join(prefix, "**/*.js")].each { |file| File.delete(file) }
+  Dir[File.join(build_prefix, "**/*.js")].each do |file|
+    destination_path = file.gsub(/^#{Regexp.escape build_prefix}/, prefix)
+    FileUtils.cp file, destination_path
+  end
 end
 
 desc "Generate docs for the bhm-google-maps plugin"
