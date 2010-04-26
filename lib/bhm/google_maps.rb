@@ -7,19 +7,15 @@ module BHM
     autoload :Helper,    'bhm/google_maps/helper'
     autoload :Builder,   'bhm/google_maps/builder'
     
-    mattr_accessor :container_class
+    class << self
+      attr_accessor :container_class, :static_map_class, :include_js_proc,
+                    :address_to_s_proc, :address_to_lat_lng_proc
+    end
+    
     self.container_class         ||= "gmap"
-    
-    mattr_accessor :static_map_class
     self.static_map_class        ||= "static-google-map"
-    
-    mattr_accessor :include_js_proc
     self.include_js_proc         ||= lambda { |t| t.concat(t.javascript_include_tag(t.google_maps_url(false), "gmap.js")) }
-    
-    mattr_accessor :address_to_s_proc
     self.address_to_s_proc       ||= lambda { |a| a.to_s }
-    
-    mattr_accessor :address_to_lat_lng_proc
     self.address_to_lat_lng_proc ||= lambda { |a| [a.lat, a.lng] }
     
     def self.configure
@@ -30,7 +26,21 @@ module BHM
       ::ActionView::Base.send(:include, BHM::GoogleMaps::Helper)
     end
     
-    self.install_helper!
+    def self.install_js!
+      from = File.expand_path("../../javascripts/gmap.js", File.dirname(__FILE__))
+      if File.exist?(from) && defined?(Rails.root)
+        FileUtils.cp from, Rails.root.join("public", "javascripts", "gmap.js")
+      end
+    end
     
+    self.install_helper! if defined?(::ActionView)
+    
+    if defined?(Rails::Railtie)
+      class Railtie < Rails::Railtie
+        rake_tasks do
+          load File.expand_path('./google_maps/tasks/bhm_google_maps.rake', File.dirname(__FILE__))
+        end
+      end
+    end
   end
 end
