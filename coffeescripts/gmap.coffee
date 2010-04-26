@@ -51,7 +51,7 @@ GMap: (($) ->
     options
   
   # Install the google map onto each option with the .gmap key.
-  map.install:
+  map.install: ->
     $('.gmap').each -> map.setupElement this
     
   # Called with a single html dom element as an argument, will
@@ -76,7 +76,7 @@ GMap: (($) ->
       map:      currentMap
     }
     mergeDataOptions $e, markerOptions, markerOptionKeys, "marker-"
-    marker: new google.maps.marker(markerOptions)
+    marker: new google.maps.Marker markerOptions
     currentMap
   
   # On load, we'll install the maps.

@@ -63,9 +63,11 @@ GMap = (function($) {
     return options;
   };
   // Install the google map onto each option with the .gmap key.
-  map.install = $('.gmap').each(function() {
-    return map.setupElement(this);
-  });
+  map.install = function install() {
+    return $('.gmap').each(function() {
+      return map.setupElement(this);
+    });
+  };
   // Called with a single html dom element as an argument, will
   // automatically set it up as a google map.
   map.setupElement = function setupElement(e) {
@@ -91,7 +93,7 @@ GMap = (function($) {
       map: currentMap
     };
     mergeDataOptions($e, markerOptions, markerOptionKeys, "marker-");
-    marker = new google.maps.marker(markerOptions);
+    marker = new google.maps.Marker(markerOptions);
     return currentMap;
   };
   // On load, we'll install the maps.

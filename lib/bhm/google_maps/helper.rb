@@ -21,6 +21,17 @@ module BHM
         BHM::GoogleMaps::Builder.new(self, address, options).to_html
       end
       
+      # Given an array of addresses, will return an image an
+      # image tag with a static google map plotting those points.
+      def static_map_of_addresses(addresses, options = {})
+        image_tag(BHM::GoogleMaps::StaticMap.for_addresses(addresses, options), :alt => "#{pluralize addresses.size, "address"} plotted on a map")
+      end
+
+      # Returns an image map with a single address plotted on a single static google map.
+      def static_map_of_address(address, options = {})
+        image_tag(BHM::GoogleMaps::StaticMap.for_address(address, options), :alt => BHM::GoogleMaps.address_to_s_proc(address))
+      end
+      
     end
   end
 end
