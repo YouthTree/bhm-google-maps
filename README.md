@@ -56,7 +56,7 @@ Then, in your view, you could simple call:
 Optionally, `draw_map_of` accepts a hash of options for:
 
 * `:static_map_html` - options to pass to the image\_tag for the static map.
-* `:static\_map` - options to pass to the BHM::GoogleMaps::StaticMap constructor. These include `:type`, `:width` and `:height`
+* `:static_map` - options to pass to the BHM::GoogleMaps::StaticMap constructor. These include `:type`, `:width` and `:height`
 * `:marker` - options to pass to the `google.maps.Marker` in js.
 
 You also get the following helpers:
