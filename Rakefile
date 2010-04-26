@@ -23,6 +23,16 @@ rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
 end
 
+desc "Compiles the javascript from Coffeescript to Javascript"
+task :compile_scripts do
+  system "coffee --no-wrap -c coffeescripts/*.coffee -o javascripts/"
+end
+
+desc "Interactively compiles coffeescripts as they're changed"
+task :watch_scripts do
+  system "coffee --no-wrap -w -c coffeescripts/*.coffee -o javascripts/"
+end
+
 desc "Generate docs for the bhm-google-maps plugin"
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
