@@ -20,7 +20,7 @@ GMap: (($) ->
   map.defaultOptions: {
     zoom:        15
     mapTypeId:   -> google.maps.MapTypeId.ROADMAP
-    scroolwheel: false
+    scrollwheel: false
   }
   
   # Very, very simple wrapper for generating a data key - tbh possibly un-needed.

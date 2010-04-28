@@ -20,7 +20,7 @@ GMap = (function($) {
     mapTypeId: function mapTypeId() {
       return google.maps.MapTypeId.ROADMAP;
     },
-    scroolwheel: false
+    scrollwheel: false
   };
   // Very, very simple wrapper for generating a data key - tbh possibly un-needed.
   dataKey = function dataKey(key, spacer) {
