@@ -35,7 +35,7 @@ module BHM
     
     def self.install_barista_framework!
       coffeescript_dir = File.expand_path("../../coffeescripts/", File.dirname(__FILE__))
-      Barista::Framework.register 'bhm-google-maps', coffeescripts
+      Barista::Framework.register 'bhm-google-maps', coffeescript_dir
     end
     
     self.install_helper!            if defined?(::ActionView)
