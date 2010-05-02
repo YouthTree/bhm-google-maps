@@ -33,7 +33,13 @@ module BHM
       end
     end
     
-    self.install_helper! if defined?(::ActionView)
+    def self.install_barista_framework!
+      coffeescript_dir = File.expand_path("../../coffeescripts/", File.dirname(__FILE__))
+      Barista::Framework.register 'bhm-google-maps', coffeescripts
+    end
+    
+    self.install_helper!            if defined?(::ActionView)
+    self.install_barista_framework! if defined?(Barista::Framework)
     
     if defined?(Rails::Railtie)
       class Railtie < Rails::Railtie

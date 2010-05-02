@@ -1,7 +1,7 @@
 # GMap is a simply, unobtrusive google map adder for jQuery + HTML5.
 # It uses data attributes to store map locations, works with a rails
 # plugin to generate static alternatives and most importantly is simple.
-GMap: (($) ->
+@['GMap']: (($) ->
   
   # The actual object we'll be exporting.
   map:             {}
