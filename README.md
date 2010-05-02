@@ -24,6 +24,10 @@ creating `config/initializers/bhm_google_maps_config.rb` and configuring from th
     
 For a fuller / more in depth reference, see configuration below.
 
+If you're using bhm-google-maps with [Barista](http://github.com/Sutto/barista), you can skip
+the `rake bhm-google-maps:install` task, it will register itself as a framework with the default
+output directory.
+
 ## Usage ##
 
 Currently, bhm-google-maps is designed to show a single map w/ static fallback. To do this,
