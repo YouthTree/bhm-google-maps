@@ -25,12 +25,12 @@ end
 
 desc "Compiles the javascript from Coffeescript to Javascript"
 task :compile_scripts do
-  system "coffee --no-wrap -c coffeescripts/*.coffee -o javascripts/"
+  system "coffee --no-wrap -o javascripts/ -c coffeescripts/"
 end
 
 desc "Interactively compiles coffeescripts as they're changed"
 task :watch_scripts do
-  system "coffee --no-wrap -w -c coffeescripts/*.coffee -o javascripts/"
+  system "coffee --no-wrap -w -o javascripts/ -c coffeescripts/"
 end
 
 desc "Compile scripts, and produce a minified version."
