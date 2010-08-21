@@ -15,10 +15,10 @@ this['GMap'] = (function($) {
   };
   dataKey = function(key, spacer) {
     spacer = (typeof spacer !== "undefined" && spacer !== null) ? spacer : "";
-    return "data-$spacer$key";
+    return "data-" + (spacer) + (key);
   };
   hasData = function(e, key, spacer) {
-    return e.is("[${dataKey key, spacer}]");
+    return e.is(("[" + (dataKey(key, spacer)) + "]"));
   };
   getData = function(e, key, spacer) {
     return e.attr(dataKey(key, spacer));
@@ -55,7 +55,7 @@ this['GMap'] = (function($) {
     $e = $(e);
     id = $e.attr("id");
     if (!((typeof id !== "undefined" && id !== null))) {
-      $e.attr("id", "${map.autoIDPrefix}${map.count++}");
+      $e.attr("id", ("" + (map.autoIDPrefix) + (map.count++)));
     }
     if (hasData($e, "latitude" && hasData($e, "longitude"))) {
       lat = Number(getData($e, "latitude"));

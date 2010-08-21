@@ -25,11 +25,11 @@
   # Very, very simple wrapper for generating a data key - tbh possibly un-needed.
   dataKey = (key, spacer) ->
     spacer?= ""
-    "data-$spacer$key"
+    "data-#{spacer}#{key}"
     
   # Returns true iff the given element has the set data element, false otherwise.
   hasData = (e, key, spacer) ->
-    e.is "[${dataKey key, spacer}]"
+    e.is "[#{dataKey key, spacer}]"
     
   # Return the value of a given data attribute.
   getData = (e, key, spacer) ->
@@ -58,7 +58,7 @@
   map.setupElement = (e) ->
     $e = $ e
     id = $e.attr "id"
-    $e.attr "id", "${map.autoIDPrefix}${map.count++}" unless id?
+    $e.attr "id", "#{map.autoIDPrefix}#{map.count++}" unless id?
     # Get the position of the current marker.
     if hasData $e, "latitude" and hasData $e, "longitude"
       lat = Number getData($e, "latitude")
