@@ -39,13 +39,13 @@
   # automatically namespaces keys etc.
   mergeDataOptions = (element, options, keys, spacer) ->
     for key in keys
-      options[key] = getData(element, key, spacer) if hasData element, key, spacer
+      options[key] = getData(element, key, spacer) if hasData(element, key, spacer)
   
   # Return the map options for a given element.
   mapOptionsForElement = (element) ->
     options = $.extend {}, map.defaultOptions
     # Set the mapTypeId if it's a function
-    options.mapTypeId = options.mapTypeId() if $.isFunction options.mapTypeId
+    options.mapTypeId = options.mapTypeId() if $.isFunction(options.mapTypeId)
     mergeDataOptions  element, options, mapOptionKeys
     options
   
@@ -60,13 +60,11 @@
     id = $e.attr "id"
     $e.attr "id", "#{map.autoIDPrefix}#{map.count++}" unless id?
     # Get the position of the current marker.
-    if hasData $e, "latitude" and hasData $e, "longitude"
+    if hasData($e, "latitude") and hasData($e, "longitude")
       lat = Number getData($e, "latitude")
       lng = Number getData($e, "longitude")
-      map.drawLatLng $e, e, lat, lng
     else
-      address = getData $e, "address"
-      # TODO: Map the address.
+      return
     point = new google.maps.LatLng lat, lng
     # Start setting up the map / create a map element.
     mapOptions = mapOptionsForElement $e
@@ -78,9 +76,9 @@
     markerOptions =
       position: point
       map:      currentMap
-
     mergeDataOptions $e, markerOptions, markerOptionKeys, "marker-"
     marker = new google.maps.Marker markerOptions
+
     currentMap
   
   # On load, we'll install the maps.

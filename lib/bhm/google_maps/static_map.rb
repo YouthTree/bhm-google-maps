@@ -23,7 +23,7 @@ module BHM
         params = @params.to_param
         params << "&"
         params << build_marker_params
-        URL_TEMPLATE % params
+        (URL_TEMPLATE % params).html_safe
       end
 
       def self.for_address(address, opts = {})
