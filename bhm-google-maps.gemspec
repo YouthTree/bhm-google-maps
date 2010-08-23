@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{bhm-google-maps}
-  s.version = "0.2.1"
+  s.version = "0.3.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Darcy Laycock"]
-  s.date = %q{2010-08-21}
+  s.date = %q{2010-08-24}
   s.description = %q{A set of helpers and javascript files that makes it trivial to implement google maps unobtrusively in an application.}
   s.email = %q{darcy.laycock@youthtree.org.au}
   s.extra_rdoc_files = [
