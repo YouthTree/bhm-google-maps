@@ -51,18 +51,17 @@ this['GMap'] = (function($) {
     });
   };
   map.setupElement = function(e) {
-    var $e, address, currentMap, id, lat, lng, mapOptions, marker, markerOptions, point;
+    var $e, currentMap, id, lat, lng, mapOptions, marker, markerOptions, point;
     $e = $(e);
     id = $e.attr("id");
     if (!((typeof id !== "undefined" && id !== null))) {
       $e.attr("id", ("" + (map.autoIDPrefix) + (map.count++)));
     }
-    if (hasData($e, "latitude" && hasData($e, "longitude"))) {
+    if (hasData($e, "latitude") && hasData($e, "longitude")) {
       lat = Number(getData($e, "latitude"));
       lng = Number(getData($e, "longitude"));
-      map.drawLatLng($e, e, lat, lng);
     } else {
-      address = getData($e, "address");
+      return null;
     }
     point = new google.maps.LatLng(lat, lng);
     mapOptions = mapOptionsForElement($e);
