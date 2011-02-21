@@ -29,7 +29,7 @@ module BHM
 
       # Returns an image map with a single address plotted on a single static google map.
       def static_map_of_address(address, options = {})
-        image_tag(BHM::GoogleMaps::StaticMap.for_address(address, options), :alt => BHM::GoogleMaps.address_to_s_proc(address))
+        image_tag(BHM::GoogleMaps::StaticMap.for_address(address, options), :alt => BHM::GoogleMaps.address_to_s_proc.call(address))
       end
       
     end
