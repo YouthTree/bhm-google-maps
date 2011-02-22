@@ -12,7 +12,7 @@ module BHM
           p[:sensor]  = false
           p[:size]    = "#{@width}x#{@height}"
           p[:maptype] = options.fetch(:type, "roadmap")
-          p[:zoom]    = options.fetch(:zoom, 15)
+          p[:zoom]    = options.fetch(:zoom, 15) if options[:zoom] != nil
         end
       end
 
@@ -34,7 +34,8 @@ module BHM
       end
 
       def self.for_addresses(*addresses)
-        map = self.new(addresses.extract_options!)
+        options = addresses.extract_options!.reverse_merge(:zoom => nil)
+        map = self.new(options)
         addresses.flatten.each { |a| map << a }
         map.to_url
       end
