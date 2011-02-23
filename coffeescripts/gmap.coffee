@@ -62,7 +62,7 @@
   # Set `data-longitude` and `data-latitude` on the map directly element
   map.locationDataForMap = ($e) ->
     if selector = getData($e, 'locations-selector')
-      locations = map.locationsDataFromItems(selector)
+      locations = map.locationsDataFromElements(selector)
     else if hasData($e, 'data-longitude')
       locations = map.locationsDataFromDataAttributes($e)
     else
@@ -86,7 +86,7 @@
   # Kinda based on hcard/geo 
   # http://microformats.org/wiki/hcard#Live_example
   # http://microformats.org/wiki/geo
-  map.locationsDataFromItems = (selector) -> 
+  map.locationsDataFromElements = (selector) -> 
     $(selector).map ->
       result =
         lat: +$('.latitude', this).text()
@@ -101,7 +101,6 @@
     locations = map.locationDataForMap($e)
     # Start setting up the map / create a map element.
     mapOptions = mapOptionsForElement $e
-    console.log locations[0].point
     mapOptions.center = locations[0].point
     # Remove static map.
     $e.empty().addClass('dynamic-google-map').removeClass('static-google-map')

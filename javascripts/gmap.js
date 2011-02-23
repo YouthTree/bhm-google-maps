@@ -49,7 +49,7 @@
     map.locationDataForMap = function($e) {
       var loc, locations, selector, _i, _len;
       if (selector = getData($e, 'locations-selector')) {
-        locations = map.locationsDataFromItems(selector);
+        locations = map.locationsDataFromElements(selector);
       } else if (hasData($e, 'data-longitude')) {
         locations = map.locationsDataFromDataAttributes($e);
       } else {
@@ -71,7 +71,7 @@
         }
       ];
     };
-    map.locationsDataFromItems = function(selector) {
+    map.locationsDataFromElements = function(selector) {
       return $(selector).map(function() {
         var result;
         return result = {
