@@ -10,27 +10,33 @@ module BHM
       end
     
       def build_static_map(marker_options)
-        ll             = self.ll_pair
+        lat, lng       = self.ll_pair
         address        = self.address_as_string
-        address_proxy  = BasicMarker.new(address, ll[0], ll[1])
+        address_proxy  = BasicMarker.new(address, lng, lat)
         static_map_url = StaticMap.for_address(address_proxy, marker_options.merge(@options[:static_map] || {}))
         @template.image_tag(static_map_url, {:alt => address}.reverse_merge(@options[:static_map_html] || {}))
       end
     
       def build_container
-        marker_options = @options[:marker] || {}
-        ll = self.ll_pair
+        marker_options = @options.delete(:marker) || {}
+        lat, lng = self.ll_pair
         address = self.address_as_string
-        container_options = {}
-        container_options['data-latitude'] = ll[0]
-        container_options['data-longitude'] = ll[1]
+        container_options = {
+          :'data-latitude' => lat,
+          :'data-longitude' => lng
+        }
         marker_options[:title] ||= address
         marker_options.each_pair do |k, v|
-          container_options["data-marker-#{k.to_s.dasherize}"] = v
+          container_options[:"data-marker-#{k.to_s.dasherize}"] = v
         end
-        default_css_class = "#{BHM::GoogleMaps.container_class} #{BHM::GoogleMaps.static_map_class}"
-        container_options = merge_options_with_class(container_options, :class => default_css_class)
-        @template.content_tag(:div, build_static_map(marker_options), container_options)
+        
+        css_class = "#{BHM::GoogleMaps.container_class} #{BHM::GoogleMaps.static_map_class} #{@options.delete(:class)}"
+        container_options[:class] = css_class
+
+        # Pass along users options
+        container_options.reverse_merge!(@options)
+        image = build_static_map(marker_options)
+        @template.content_tag(:div, image, container_options)
       end
     
       def to_html
@@ -43,14 +49,6 @@ module BHM
       
       def address_as_string
         BHM::GoogleMaps.address_to_s_proc.call(@address)
-      end
-    
-      protected
-    
-      def merge_options_with_class(a, b)
-        a, b = (a || {}).stringify_keys, (b || {}).stringify_keys
-        css_class = [a['class'], b['class']].join(" ").squeeze(" ")
-        a.merge(b).merge('class' => css_class)
       end
     end
   end

@@ -54,44 +54,91 @@
     $('.gmap').each -> map.setupElement this
 
   # Return location data for a given map
+  # Looks at `data-` on the element to determine where location data is
+  #
+  # Use `data-locations-selector` to contain a css selector that cooresponds 
+  # to elements that contain the data (see `locationsDataFromElements`).
+  #
+  # Set `data-longitude` and `data-latitude` on the map directly element
   map.locationDataForMap = ($e) ->
-    map.locationDataFromDataAttributes($e)
+    if selector = getData($e, 'locations-selector')
+      locations = map.locationsDataFromItems(selector)
+    else if hasData($e, 'data-longitude')
+      locations = map.locationsDataFromDataAttributes($e)
+    else
+      raise "dont have any map location data"
+    # Add gmap point object to each location
+    for loc in locations
+      loc.point = new google.maps.LatLng(loc.lat, loc.lng) 
+    locations
 
   # Default strategy to fetch location data, 
   # Get a single location's data from element's `data-` attributes
-  map.locationDataFromDataAttributes = ($e) ->
-    result = 
+  map.locationsDataFromDataAttributes = ($e) ->
+    [
       id: $e.attr("id") || "#{map.autoIDPrefix}#{map.count++}"
       lat: +getData($e, "latitude")
       lng: +getData($e, "longitude")
       title: getData($e, 'marker-title')
+    ]
+
+  # Fetch location data from markup
+  # Kinda based on hcard/geo 
+  # http://microformats.org/wiki/hcard#Live_example
+  # http://microformats.org/wiki/geo
+  map.locationsDataFromItems = (selector) -> 
+    $(selector).map ->
+      result =
+        lat: +$('.latitude', this).text()
+        lng: +$('.longitude', this).text()
+        title: $('.marker-title', this).text()
 
   # Called with a single html dom element as an argument, will
   # automatically set it up as a google map.
   map.setupElement = (e) ->
     $e = $ e
-    location = map.locationDataForMap($e)
-    point = new google.maps.LatLng location.lat, location.lng
+    # Get locations data 
+    locations = map.locationDataForMap($e)
     # Start setting up the map / create a map element.
     mapOptions = mapOptionsForElement $e
-    mapOptions.center = point
+    console.log locations[0].point
+    mapOptions.center = locations[0].point
     # Remove static map.
     $e.empty().addClass('dynamic-google-map').removeClass('static-google-map')
     # Make dynamic map.
     currentMap = new google.maps.Map e, mapOptions
+    map.setLocations locations, currentMap
+    # Store map reference
     map.maps.push currentMap
-    # Now, we need to finally add the marker to the map.
-    markerOptions =
-      position: point
-      map:      currentMap
-      title:    location.title
-    #mergeDataOptions $e, markerOptions, markerOptionKeys, "marker-"
-    marker = new google.maps.Marker markerOptions
-
     currentMap
   
+  # Places the location markers on the map
+  # Sets the map bounds so they are all visible
+  map.setLocations = (locations, _map) ->
+    map.addLocationsToMap(locations, _map)
+    bounds = map.boundsFor(locations)
+    _map.fitBounds(bounds)
+
+  # Returns a `LatLngBounds` object that contains
+  # the given locations
+  map.boundsFor = (locations) ->
+    bounds = new google.maps.LatLngBounds
+    bounds.extend(loc.point) for loc in locations
+    bounds
+
+  # Adds one or an array of locations to the map
+  map.addLocationsToMap = (locations, _map) ->
+    map.addLocationToMap(loc, _map) for loc in $.makeArray(locations) 
+
+  # Adds one location to the map
+  map.addLocationToMap = (location, _map) ->
+    new google.maps.Marker 
+      map:      _map
+      position: location.point
+      title:    location.title
+
   # On load, we'll install the maps.
-  $(document).ready -> map.install()
+  $(document).ready map.install
   
   # Return map to set it up.
   map
