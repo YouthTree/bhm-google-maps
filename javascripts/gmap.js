@@ -1,9 +1,8 @@
 (function() {
   this['GMap'] = (function($) {
-    var dataKey, getData, hasData, map, mapOptionKeys, mapOptionsForElement, markerOptionKeys, mergeDataOptions;
+    var dataKey, getData, hasData, map, mapOptionKeys, mapOptionsForElement, mergeDataOptions;
     map = {};
     mapOptionKeys = ["zoom", "title"];
-    markerOptionKeys = ["title"];
     map.count = 0;
     map.autoIDPrefix = "gmap-";
     map.maps = [];
@@ -47,20 +46,23 @@
         return map.setupElement(this);
       });
     };
+    map.locationDataForMap = function($e) {
+      return map.locationDataFromDataAttributes($e);
+    };
+    map.locationDataFromDataAttributes = function($e) {
+      var result;
+      return result = {
+        id: $e.attr("id") || ("" + map.autoIDPrefix + (map.count++)),
+        lat: +getData($e, "latitude"),
+        lng: +getData($e, "longitude"),
+        title: getData($e, 'marker-title')
+      };
+    };
     map.setupElement = function(e) {
-      var $e, currentMap, id, lat, lng, mapOptions, marker, markerOptions, point;
+      var $e, currentMap, location, mapOptions, marker, markerOptions, point;
       $e = $(e);
-      id = $e.attr("id");
-      if (id == null) {
-        $e.attr("id", "" + map.autoIDPrefix + (map.count++));
-      }
-      if (hasData($e, "latitude") && hasData($e, "longitude")) {
-        lat = Number(getData($e, "latitude"));
-        lng = Number(getData($e, "longitude"));
-      } else {
-        return;
-      }
-      point = new google.maps.LatLng(lat, lng);
+      location = map.locationDataForMap($e);
+      point = new google.maps.LatLng(location.lat, location.lng);
       mapOptions = mapOptionsForElement($e);
       mapOptions.center = point;
       $e.empty().addClass('dynamic-google-map').removeClass('static-google-map');
@@ -68,9 +70,9 @@
       map.maps.push(currentMap);
       markerOptions = {
         position: point,
-        map: currentMap
+        map: currentMap,
+        title: location.title
       };
-      mergeDataOptions($e, markerOptions, markerOptionKeys, "marker-");
       marker = new google.maps.Marker(markerOptions);
       return currentMap;
     };

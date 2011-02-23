@@ -8,7 +8,7 @@
   
   # Map and marker options to autoextract.
   mapOptionKeys    = ["zoom", "title"]
-  markerOptionKeys = ["title"] 
+  #markerOptionKeys = ["title"] 
   
   # Exposed options / data.
   map.count          = 0
@@ -53,30 +53,39 @@
   map.install = ->
     $('.gmap').each -> map.setupElement this
 
+  # Return location data for a given map
+  map.locationDataForMap = ($e) ->
+    map.locationDataFromDataAttributes($e)
+
+  # Default strategy to fetch location data, 
+  # Get a single location's data from element's `data-` attributes
+  map.locationDataFromDataAttributes = ($e) ->
+    result = 
+      id: $e.attr("id") || "#{map.autoIDPrefix}#{map.count++}"
+      lat: +getData($e, "latitude")
+      lng: +getData($e, "longitude")
+      title: getData($e, 'marker-title')
+
   # Called with a single html dom element as an argument, will
   # automatically set it up as a google map.
   map.setupElement = (e) ->
     $e = $ e
-    id = $e.attr "id"
-    $e.attr "id", "#{map.autoIDPrefix}#{map.count++}" unless id?
-    # Get the position of the current marker.
-    if hasData($e, "latitude") and hasData($e, "longitude")
-      lat = Number getData($e, "latitude")
-      lng = Number getData($e, "longitude")
-    else
-      return
-    point = new google.maps.LatLng lat, lng
+    location = map.locationDataForMap($e)
+    point = new google.maps.LatLng location.lat, location.lng
     # Start setting up the map / create a map element.
     mapOptions = mapOptionsForElement $e
     mapOptions.center = point
+    # Remove static map.
     $e.empty().addClass('dynamic-google-map').removeClass('static-google-map')
+    # Make dynamic map.
     currentMap = new google.maps.Map e, mapOptions
     map.maps.push currentMap
     # Now, we need to finally add the marker to the map.
     markerOptions =
       position: point
       map:      currentMap
-    mergeDataOptions $e, markerOptions, markerOptionKeys, "marker-"
+      title:    location.title
+    #mergeDataOptions $e, markerOptions, markerOptionKeys, "marker-"
     marker = new google.maps.Marker markerOptions
 
     currentMap
