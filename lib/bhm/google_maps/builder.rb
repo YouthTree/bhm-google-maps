@@ -18,24 +18,19 @@ module BHM
       end
     
       def build_container
-        marker_options = @options.delete(:marker) || {}
         lat, lng = self.ll_pair
-        address = self.address_as_string
-        container_options = {
-          :'data-latitude' => lat,
-          :'data-longitude' => lng
-        }
-        marker_options[:title] ||= address
+        container_options = {'data-latitude' => lat, 'data-longitude' => lng}
+        
+        marker_options = @options.delete(:marker) || {}        
+        marker_options[:title] ||= self.address_as_string
         marker_options.each_pair do |k, v|
           container_options[:"data-marker-#{k.to_s.dasherize}"] = v
         end
-        
-        css_class = "#{BHM::GoogleMaps.container_class} #{BHM::GoogleMaps.static_map_class} #{@options.delete(:class)}"
-        container_options[:class] = css_class
+        image = build_static_map(marker_options)        
+        container_options[:class] = "#{BHM::GoogleMaps.container_class} #{BHM::GoogleMaps.static_map_class} #{@options.delete(:class)}"
 
-        # Pass along users options
+        # Pass along users html options
         container_options.reverse_merge!(@options)
-        image = build_static_map(marker_options)
         @template.content_tag(:div, image, container_options)
       end
     
