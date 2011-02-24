@@ -53,7 +53,7 @@
       } else if (hasData($e, 'data-longitude')) {
         locations = map.locationsDataFromDataAttributes($e);
       } else {
-        raise("dont have any map location data");
+        throw "dont have any map location data";
       }
       for (_i = 0, _len = locations.length; _i < _len; _i++) {
         loc = locations[_i];
@@ -86,7 +86,6 @@
       $e = $(e);
       locations = map.locationDataForMap($e);
       mapOptions = mapOptionsForElement($e);
-      console.log(locations[0].point);
       mapOptions.center = locations[0].point;
       $e.empty().addClass('dynamic-google-map').removeClass('static-google-map');
       currentMap = new google.maps.Map(e, mapOptions);

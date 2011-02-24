@@ -66,7 +66,7 @@
     else if hasData($e, 'data-longitude')
       locations = map.locationsDataFromDataAttributes($e)
     else
-      raise "dont have any map location data"
+      throw "dont have any map location data"
     # Add gmap point object to each location
     for loc in locations
       loc.point = new google.maps.LatLng(loc.lat, loc.lng) 
