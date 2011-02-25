@@ -16,6 +16,8 @@ module BHM
         }
         zoom = options.fetch(:zoom, @addresses.length > 1 ? nil : 15)
         @params[:zoom] = zoom if zoom
+        @cycle_colors = options[:cycle_colors]
+        @cycle_labels = options[:cycle_labels]
       end
 
       def <<(address)
@@ -33,8 +35,8 @@ module BHM
         params = []
         @addresses.each_with_index do |address, index|
           return "markers=#{to_ll @addresses.first}" if @addresses.size == 1
-          color = COLOURS[index % COLOURS.size]
-          label = LABELS[index % LABELS.size]
+          color = COLOURS[index % COLOURS.size] if @cycle_color
+          label = LABELS[index % LABELS.size]  if @cycle_label
           params << "markers=color:#{color}|label:#{label}|#{to_ll(address)}"
         end
         params.join("&")
