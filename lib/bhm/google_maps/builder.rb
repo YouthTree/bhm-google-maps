@@ -37,6 +37,8 @@ module BHM
           container_options[:'data-locations-selector'] = selector
         elsif @addresses.length == 1
           embed_location_data_for_location(container_options)
+        else
+          embed_location_data_for_locations(container_options)
         end
 
         #Pass along users html options
@@ -52,6 +54,23 @@ module BHM
           container_options[:"data-marker-#{k.to_s.dasherize}"] = v
         end                                    
       end
+
+      def embed_location_data_for_locations(container_options)
+        latitudes, longitudes = [], []
+        @addresses.each do |address|
+          latitudes << address.lat
+          longitudes << address.lng
+        end
+        container_options.merge!(
+          'data-latitude' => latitudes.join(', '),
+          'data-longitude' => longitudes.join(', ')
+        )
+        #@marker_options[:title] ||= self.address_as_string
+        #@marker_options.each_pair do |k, v|
+          #container_options[:"data-marker-#{k.to_s.dasherize}"] = v
+        #end                                    
+      end
+      
 
       def alt_text
         if (count = @addresses.length) > 1

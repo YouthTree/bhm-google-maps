@@ -47,11 +47,14 @@
       });
     };
     map.locationDataForMap = function($e) {
-      var loc, locations, selector, _i, _len;
+      var loc, locations, longitude, selector, _i, _len;
+      longitude = getData($e, 'longitude');
       if (selector = getData($e, 'locations-selector')) {
         locations = map.locationsDataFromElements(selector);
-      } else if (hasData($e, 'longitude')) {
+      } else if (longitude.indexOf(',') > -1) {
         locations = map.locationsDataFromDataAttributes($e);
+      } else if (longitude) {
+        locations = map.locationDataFromDataAttributes($e);
       } else {
         throw "dont have any map location data";
       }
@@ -61,15 +64,35 @@
       }
       return locations;
     };
+    map.locationDataFromDataAttributes = function($e) {
+      return [map.readDataAttributes($e)];
+    };
     map.locationsDataFromDataAttributes = function($e) {
-      return [
-        {
-          id: $e.attr("id") || ("" + map.autoIDPrefix + (map.count++)),
-          lat: +getData($e, "latitude"),
-          lng: +getData($e, "longitude"),
-          title: getData($e, 'marker-title')
+      var attrs, i, lat, lats, lngs, result;
+      attrs = map.readDataAttributes($e);
+      lats = attrs.lat.split(', ');
+      lngs = attrs.lng.split(', ');
+      return result = (function() {
+        var _len, _results;
+        _results = [];
+        for (i = 0, _len = lats.length; i < _len; i++) {
+          lat = lats[i];
+          _results.push({
+            lat: lat,
+            lng: lngs[i]
+          });
         }
-      ];
+        return _results;
+      })();
+    };
+    map.readDataAttributes = function($e) {
+      var result;
+      return result = {
+        id: $e.attr("id") || ("" + map.autoIDPrefix + (map.count++)),
+        lat: getData($e, "latitude"),
+        lng: getData($e, "longitude"),
+        title: getData($e, 'marker-title')
+      };
     };
     map.locationsDataFromElements = function(selector) {
       return $(selector).map(function() {

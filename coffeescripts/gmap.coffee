@@ -61,10 +61,13 @@
   #
   # Set `data-longitude` and `data-latitude` on the map directly element
   map.locationDataForMap = ($e) ->
+    longitude = getData($e, 'longitude')
     if selector = getData($e, 'locations-selector')
       locations = map.locationsDataFromElements(selector)
-    else if hasData($e, 'longitude')
+    else if longitude.indexOf(',') > -1 # multiple locations
       locations = map.locationsDataFromDataAttributes($e)
+    else if longitude
+      locations = map.locationDataFromDataAttributes($e)
     else
       throw "dont have any map location data"
     # Add gmap point object to each location
@@ -74,13 +77,25 @@
 
   # Default strategy to fetch location data, 
   # Get a single location's data from element's `data-` attributes
+  map.locationDataFromDataAttributes = ($e) ->
+    [map.readDataAttributes($e)]
+
+  # Get Multiple locations embedded in `data-` attributes like:
+  #     data-latitude="15,20.99" data-longitude="99.9,40.72"
   map.locationsDataFromDataAttributes = ($e) ->
-    [
+    attrs = map.readDataAttributes($e)
+    lats = attrs.lat.split ', '
+    lngs = attrs.lng.split ', '
+    result = for lat, i in lats
+      {lat: lat, lng: lngs[i]}
+    
+  map.readDataAttributes = ($e) ->
+    result = 
       id: $e.attr("id") || "#{map.autoIDPrefix}#{map.count++}"
-      lat: +getData($e, "latitude")
-      lng: +getData($e, "longitude")
+      lat: getData($e, "latitude")
+      lng: getData($e, "longitude")
       title: getData($e, 'marker-title')
-    ]
+    
 
   # Fetch location data from markup
   # Kinda based on hcard/geo 

@@ -3,13 +3,13 @@ module BHM
     module Helper
       
       def include_gmap_js
-        @using_gmaps_js ||= begin
+        @included_map_js ||= begin
           BHM::GoogleMaps.include_js_proc.call(self)
           true
         end
       end
       
-      # Draw a dynamic map of 1 or more locations
+      # Draw a google map of 1 or more locations
       def gmap(addresses, options={})
         include_gmap_js unless options[:static]
         BHM::GoogleMaps::Builder.new(self, addresses, options).to_html
