@@ -27,7 +27,8 @@ module BHM
 
       def build_static_map
         url = StaticMap.new(@addresses, @marker_options.merge(@options||{})).to_url
-        @template.image_tag(url, {:alt => alt_text}.reverse_merge(@options||{}))
+        options = {:alt => alt_text}.merge(@options||{})
+        @template.image_tag(url, options)
       end
       
       def build_container(image)

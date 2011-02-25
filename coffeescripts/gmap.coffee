@@ -110,18 +110,25 @@
 
   # Called with a single html dom element as an argument, will
   # automatically set it up as a google map.
-  map.setupElement = (e) ->
-    $e = $ e
+  map.setupElement = (container) ->
+    # Position static image infront of dynamic map until the map
+    # Is loaded
+    container = $(container).css 'position', 'relative'  
+    staticMap = container.find('img:first').css({position: 'absolute', top: 0, 'z-index': 9999})
+    dynamicMap = $('<div class="dynamic-google-map" />').appendTo container
     # Get locations data 
-    locations = map.locationDataForMap($e)
+    locations = map.locationDataForMap(container)
     # Start setting up the map / create a map element.
-    mapOptions = mapOptionsForElement $e
+    mapOptions = mapOptionsForElement container
     mapOptions.center = locations[0].point
-    # Remove static map.
-    $e.empty().addClass('dynamic-google-map').removeClass('static-google-map')
     # Make dynamic map.
-    currentMap = new google.maps.Map e, mapOptions
+    currentMap = new google.maps.Map dynamicMap[0], mapOptions
     map.setLocations locations, currentMap
+    # Remove static map when dynamic map is loaded.
+    google.maps.event.addListenerOnce currentMap, 'tilesloaded', () ->
+     container.removeClass('static-google-map')
+     staticMap.remove()
+     dynamicMap.css 'z-index', 'auto'
     # Store map reference
     map.maps.push currentMap
     currentMap

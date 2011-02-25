@@ -104,15 +104,25 @@
         };
       });
     };
-    map.setupElement = function(e) {
-      var $e, currentMap, locations, mapOptions;
-      $e = $(e);
-      locations = map.locationDataForMap($e);
-      mapOptions = mapOptionsForElement($e);
+    map.setupElement = function(container) {
+      var currentMap, dynamicMap, locations, mapOptions, staticMap;
+      container = $(container).css('position', 'relative');
+      staticMap = container.find('img:first').css({
+        position: 'absolute',
+        top: 0,
+        'z-index': 9999
+      });
+      dynamicMap = $('<div class="dynamic-google-map" />').appendTo(container);
+      locations = map.locationDataForMap(container);
+      mapOptions = mapOptionsForElement(container);
       mapOptions.center = locations[0].point;
-      $e.empty().addClass('dynamic-google-map').removeClass('static-google-map');
-      currentMap = new google.maps.Map(e, mapOptions);
+      currentMap = new google.maps.Map(dynamicMap[0], mapOptions);
       map.setLocations(locations, currentMap);
+      google.maps.event.addListenerOnce(currentMap, 'tilesloaded', function() {
+        container.removeClass('static-google-map');
+        staticMap.remove();
+        return dynamicMap.css('z-index', 'auto');
+      });
       map.maps.push(currentMap);
       return currentMap;
     };
