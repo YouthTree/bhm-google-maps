@@ -16,13 +16,13 @@ module BHM
         @addresses  = Array.wrap(addresses).map {|l| Location.new(l) }
         @options  = options.symbolize_keys
         @marker_options = @options.delete(:marker) || {}
-        @no_container = @options.delete(:no_container)
+        @static = @options.delete(:static)
         @css_class = "#{BHM::GoogleMaps.container_class} #{BHM::GoogleMaps.static_map_class} #{@options.delete(:class)}"
       end
 
       def to_html
         image = build_static_map
-        @no_container ? image :  build_container(image) 
+        @static ? image :  build_container(image) 
       end
 
       def build_static_map
