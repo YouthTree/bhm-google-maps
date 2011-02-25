@@ -1,6 +1,10 @@
 module BHM
   module GoogleMaps
 
+    DEFAULT_WIDTH = 540
+    DEFAULT_HEIGHT = 400
+    DEFAULT_SIZE = "#{DEFAULT_WIDTH}x#{DEFAULT_HEIGHT}"
+
     class Location
       def initialize(object)
         @lat, @lng = BHM::GoogleMaps.address_to_lat_lng_proc.call(object)
@@ -17,7 +21,18 @@ module BHM
         @options  = options.symbolize_keys
         @marker_options = @options.delete(:marker) || {}
         @static = @options.delete(:static)
-        @css_class = "#{BHM::GoogleMaps.container_class} #{BHM::GoogleMaps.static_map_class} #{@options.delete(:class)}"
+        @width, @height, @size = determine_size(options)
+        css_class = "#{BHM::GoogleMaps.container_class} #{BHM::GoogleMaps.static_map_class} #{@options.delete(:class)}"
+        @container_html_options = {
+          :class => css_class,
+          :style => "width: #{@width}px; height: #{@height}px"
+        }
+      end
+
+      def determine_size(options)
+        size = options.delete(:size) || DEFAULT_SIZE
+        w, h = size.split('x')
+        return w, h, size
       end
 
       def to_html
@@ -32,43 +47,42 @@ module BHM
       end
       
       def build_container(image)
-        container_options = { :class => @css_class }
         if selector = @options.delete(:location_data_selector)
           # Lat/Lng data is embedded elsewhere in the page
-          container_options[:'data-locations-selector'] = selector
+          container_html_options[:'data-locations-selector'] = selector
         elsif @addresses.length == 1
-          embed_location_data_for_location(container_options)
+          embed_location_data_for_location
         else
-          embed_location_data_for_locations(container_options)
+          embed_location_data_for_locations
         end
 
         #Pass along users html options
-        #container_options.reverse_merge!(@options)
-        @template.content_tag(:div, image, container_options)
+        #container_html_options.reverse_merge!(@options)
+        @template.content_tag(:div, image, @container_html_options)
       end
     
-      def embed_location_data_for_location(container_options)
+      def embed_location_data_for_location
         lat, lng = @addresses.first.lat, @addresses.first.lng
-        container_options.merge! 'data-latitude' => lat, 'data-longitude' => lng
+        @container_html_options.merge! 'data-latitude' => lat, 'data-longitude' => lng
         #@marker_options[:title] ||= self.address_as_string
         @marker_options.each_pair do |k, v|
-          container_options[:"data-marker-#{k.to_s.dasherize}"] = v
+          @container_html_options[:"data-marker-#{k.to_s.dasherize}"] = v
         end                                    
       end
 
-      def embed_location_data_for_locations(container_options)
+      def embed_location_data_for_locations
         latitudes, longitudes = [], []
         @addresses.each do |address|
           latitudes << address.lat
           longitudes << address.lng
         end
-        container_options.merge!(
+        @container_html_options.merge!(
           'data-latitude' => latitudes.join(', '),
           'data-longitude' => longitudes.join(', ')
         )
         #@marker_options[:title] ||= self.address_as_string
         #@marker_options.each_pair do |k, v|
-          #container_options[:"data-marker-#{k.to_s.dasherize}"] = v
+          #container_html_options[:"data-marker-#{k.to_s.dasherize}"] = v
         #end                                    
       end
       

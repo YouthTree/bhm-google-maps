@@ -112,7 +112,10 @@
         top: 0,
         'z-index': 9999
       });
-      dynamicMap = $('<div class="dynamic-google-map" />').appendTo(container);
+      dynamicMap = $('<div class="dynamic-google-map" />').css({
+        height: '100%',
+        width: '100%'
+      }).appendTo(container);
       locations = map.locationDataForMap(container);
       mapOptions = mapOptionsForElement(container);
       mapOptions.center = locations[0].point;
@@ -120,8 +123,7 @@
       map.setLocations(locations, currentMap);
       google.maps.event.addListenerOnce(currentMap, 'tilesloaded', function() {
         container.removeClass('static-google-map');
-        staticMap.remove();
-        return dynamicMap.css('z-index', 'auto');
+        return staticMap.remove();
       });
       map.maps.push(currentMap);
       return currentMap;

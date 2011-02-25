@@ -115,7 +115,7 @@
     # Is loaded
     container = $(container).css 'position', 'relative'  
     staticMap = container.find('img:first').css({position: 'absolute', top: 0, 'z-index': 9999})
-    dynamicMap = $('<div class="dynamic-google-map" />').appendTo container
+    dynamicMap = $('<div class="dynamic-google-map" />').css({height: '100%', width: '100%'}).appendTo container
     # Get locations data 
     locations = map.locationDataForMap(container)
     # Start setting up the map / create a map element.
@@ -128,7 +128,6 @@
     google.maps.event.addListenerOnce currentMap, 'tilesloaded', () ->
      container.removeClass('static-google-map')
      staticMap.remove()
-     dynamicMap.css 'z-index', 'auto'
     # Store map reference
     map.maps.push currentMap
     currentMap

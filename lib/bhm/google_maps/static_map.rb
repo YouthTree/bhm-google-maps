@@ -7,11 +7,9 @@ module BHM
 
       def initialize(addresses, options = {})
         @addresses = addresses
-        @width  = options.fetch(:width, 540)
-        @height = options.fetch(:height, 400)
         @params = {
           :sensor  => false,
-          :size    => "#{@width}x#{@height}",
+          :size    => options[:size],
           :maptype => options.fetch(:type, "roadmap")
         }
         zoom = options.fetch(:zoom, @addresses.length > 1 ? nil : 15)
@@ -32,14 +30,12 @@ module BHM
 
       def build_marker_params
         return "markers=#{to_ll @addresses.first}" if @addresses.size == 1
-        params = []
-        @addresses.each_with_index do |address, index|
+        @addresses.each_with_index.map do |address, index|
           return "markers=#{to_ll @addresses.first}" if @addresses.size == 1
           color = COLOURS[index % COLOURS.size] if @cycle_color
           label = LABELS[index % LABELS.size]  if @cycle_label
-          params << "markers=color:#{color}|label:#{label}|#{to_ll(address)}"
-        end
-        params.join("&")
+          "markers=color:#{color}|label:#{label}|#{to_ll(address)}"
+        end.join("&")
       end
 
       def to_ll(address)
