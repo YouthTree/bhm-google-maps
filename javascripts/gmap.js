@@ -50,7 +50,7 @@
       var loc, locations, selector, _i, _len;
       if (selector = getData($e, 'locations-selector')) {
         locations = map.locationsDataFromElements(selector);
-      } else if (hasData($e, 'data-longitude')) {
+      } else if (hasData($e, 'longitude')) {
         locations = map.locationsDataFromDataAttributes($e);
       } else {
         throw "dont have any map location data";
