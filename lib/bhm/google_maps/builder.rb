@@ -8,7 +8,7 @@ module BHM
     class Location
       def initialize(object)
         @lat, @lng = BHM::GoogleMaps.address_to_lat_lng_proc.call(object)
-        @address = BHM::GoogleMaps.address_to_s_proc.call(@address) 
+        @address = BHM::GoogleMaps.address_to_s_proc.call(object) 
       end
       attr_reader :lat, :lng, :address
     end

@@ -31,7 +31,7 @@ output directory.
 ## Usage ##
 
 Currently, bhm-google-maps is designed to show a single map w/ static fallback. To do this,
-you use the `draw_map_of` helper. You pass it an object you wish to plot, typically following the
+you use the `gmap` helper. You pass it an object you wish to plot, typically following the
 convention that:
 
 1. `object.lat` and `object.lng` return latitude / longitude respectively
@@ -55,9 +55,9 @@ class demo:
     
 Then, in your view, you could simple call:
 
-    <%= draw_map_of Location.new("My House", 12.345, 56.789) %>
+    <%= gmap Location.new("My House", 12.345, 56.789) %>
   
-Optionally, `draw_map_of` accepts a hash of options for:
+Optionally, `gmap` accepts a hash of options for:
 
 * `:static_map_html` - options to pass to the image\_tag for the static map.
 * `:static_map` - options to pass to the BHM::GoogleMaps::StaticMap constructor. These include `:type`, `:width` and `:height`
